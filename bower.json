@@ -1,0 +1,21 @@
+{
+  "name": "IARC-Sim",
+  "description": "The simulation system for IARC 2016",
+  "main": "./build/main.js",
+  "authors": [
+    "yaoht <yht199505@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "babylonjs": "~2.2.0"
+  }
+}
