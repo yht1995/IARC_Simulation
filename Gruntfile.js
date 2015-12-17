@@ -37,12 +37,12 @@ module.exports = function(grunt) {
 
         coffee: {
             compile: {
-                expand: true,
-                flatten: true,
-                cwd: 'src/scripts/',
-                src: ['**/*.coffee'],
-                dest: 'build/js/',
-                ext: '.js'
+                options: {
+                    bare: true
+                },
+                files: {
+                    'build/js/_app.js': 'src/scripts/**/*.coffee',
+                }
             },
         },
 
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
             script: {
                 expand: true,
                 cwd: 'src/scripts/',
-                src: '**/*',
+                src: '**/*.js',
                 dest: 'build/js',
             }
         },
@@ -98,6 +98,7 @@ module.exports = function(grunt) {
     });
 
 
-    grunt.registerTask('default', ['bower_concat', 'jade:compile', 'stylus:compile', 'coffee:compile', 'copy']);
-
+    grunt.registerTask('default', ['copy', 'bower_concat', 'jade:compile', 'stylus:compile', 'coffee:compile']);
+    grunt.registerTask('build', ['copy', 'bower_concat', 'jade:compile', 'stylus:compile', 'coffee:compile']);
+    grunt.registerTask('rebuild', ['clean', 'build']);
 };

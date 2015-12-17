@@ -3,6 +3,8 @@ startBabylonJS = ->
         canvas = document.getElementById("renderCanvas")
         engine = new BABYLON.Engine(canvas, true)
         scene = new BABYLON.Scene(engine)
+        scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
+        scene.collisionsEnabled = true;
 
         #Adding a light
         light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene)
@@ -10,9 +12,8 @@ startBabylonJS = ->
         light.groundColor = new BABYLON.Color3(0, 0, 0)
         light.intensity = 1
 
-
         #Adding an Arc Rotate Camera
-        camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, BABYLON.Vector3.Zero(), scene)
+        camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 500, BABYLON.Vector3.Zero(), scene)
         camera.attachControl(canvas)
         camera.checkCollisions = true
 
@@ -40,21 +41,36 @@ startBabylonJS = ->
 
         #Creation of a cylinder
         #(name, height, diamTop, diamBottom, tessellation, [optional height subdivs], scene, updatable)
-        materialSphere1 = new BABYLON.StandardMaterial("texture1", scene)
-        materialSphere1.diffuseColor = new BABYLON.Color3(1.0, 0.2, 0.7)
-        cylinder = BABYLON.Mesh.CreateCylinder("cylinder", 10, 30, 30, 32, 1, scene, false)
-        cylinder.material = materialSphere1
+        bots = []
+        for i in [1..5]
+            bot = new RedBot(scene)
+            bot.create()
+            bots.push bot
+        for i in [1..5]
+            bot = new BlueBot(scene)
+            bot.create()
+            bots.push bot
+        for i in [1..4]
+            bot = new Obstacle(scene)
+            bot.create()
+            bots.push bot
 
         # Shadows
         shadowGenerator = new BABYLON.ShadowGenerator(1024, light)
+        for bot in bots
+            shadowGenerator.getShadowMap().renderList.push(bot.cylinder);
+            shadowGenerator.getShadowMap().renderList.push(bot.cylinder_top);
         shadowGenerator.useVarianceShadowMap = true
+        shadowGenerator.usePoissonSampling = true;
         ground.receiveShadows = true
-        skybox.receiveShadows = true
 
+        scene.registerBeforeRender =>
+            for bot in bots
+                bot.move()
         # Once the scene is loaded, just register a render loop to render it
         engine.runRenderLoop =>
             scene.render()
 
 
-window.addEventListener("resize", (engine)-> engine.resize())
+window.addEventListener("resize", ()-> engine.resize())
 document.addEventListener("DOMContentLoaded", startBabylonJS, false)
