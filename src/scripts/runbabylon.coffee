@@ -3,7 +3,6 @@ startBabylonJS = ->
         canvas = document.getElementById("renderCanvas")
         engine = new BABYLON.Engine(canvas, true)
         scene = new BABYLON.Scene(engine)
-        scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
         scene.collisionsEnabled = true;
 
         #Adding a light
@@ -41,31 +40,28 @@ startBabylonJS = ->
 
         #Creation of a cylinder
         #(name, height, diamTop, diamBottom, tessellation, [optional height subdivs], scene, updatable)
-        bots = []
         for i in [1..5]
-            bot = new RedBot(scene)
+            bot = new RedBot(scene,100*Math.sin(Math.PI/5*i),100*Math.cos(Math.PI/5*i))
             bot.create()
-            bots.push bot
         for i in [1..5]
-            bot = new BlueBot(scene)
+            bot = new BlueBot(scene,-100*Math.sin(Math.PI/5*i),-100*Math.cos(Math.PI/5*i))
             bot.create()
-            bots.push bot
         for i in [1..4]
-            bot = new Obstacle(scene)
+            bot = new Obstacle(scene,150*Math.sin(Math.PI/2*i),150*Math.cos(Math.PI/2*i))
             bot.create()
-            bots.push bot
 
         # Shadows
         shadowGenerator = new BABYLON.ShadowGenerator(1024, light)
-        for bot in bots
+        for bot in Bot.bots
             shadowGenerator.getShadowMap().renderList.push(bot.cylinder);
             shadowGenerator.getShadowMap().renderList.push(bot.cylinder_top);
         shadowGenerator.useVarianceShadowMap = true
         shadowGenerator.usePoissonSampling = true;
         ground.receiveShadows = true
+        skybox.receiveShadows = true
 
         scene.registerBeforeRender =>
-            for bot in bots
+            for bot in Bot.bots
                 bot.move()
         # Once the scene is loaded, just register a render loop to render it
         engine.runRenderLoop =>
