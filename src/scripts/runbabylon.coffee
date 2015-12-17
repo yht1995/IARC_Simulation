@@ -18,7 +18,7 @@ startBabylonJS = ->
 
         ground = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 32, scene)
         materialground = new BABYLON.StandardMaterial("ground", scene)
-        materialground.diffuseTexture = new BABYLON.Texture("./images/textures/ground.jpg", scene)
+        materialground.diffuseTexture = new BABYLON.Texture("images/textures/ground.jpg", scene)
         materialground.diffuseTexture.uScale = 10
         materialground.diffuseTexture.vScale = 10
         materialground.backFaceCulling = false
@@ -31,7 +31,7 @@ startBabylonJS = ->
         skybox = BABYLON.Mesh.CreateBox("wall", 1000.0, scene)
         skyboxMaterial = new BABYLON.StandardMaterial("wall", scene)
         skyboxMaterial.backFaceCulling = false
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./images/textures/wall", scene)
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("images/textures/wall", scene)
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE
         skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0)
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0)

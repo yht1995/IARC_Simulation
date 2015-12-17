@@ -7,12 +7,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bower-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-coffee');
+    grunt.loadNpmTasks('grunt-gh-pages');
 
     grunt.initConfig({
         bower_concat: {
             all: {
-                dest: 'build/js/_bower.js',
-                cssDest: 'build/css/_bower.css',
+                dest: 'build/js/bower.js',
+                cssDest: 'build/css/bower.css',
                 mainFiles: {
                     'babylonjs': 'dist/babylon.2.2.js'
                 }
@@ -41,12 +42,16 @@ module.exports = function(grunt) {
                     bare: true
                 },
                 files: {
-                    'build/js/_app.js': 'src/scripts/**/*.coffee',
+                    'build/js/app.js': 'src/scripts/**/*.coffee',
                 }
             },
         },
 
         copy: {
+            config: {
+                src: 'src/CNAME',
+                dest: 'build/CNAME',
+            },
             asset: {
                 expand: true,
                 cwd: 'src/asset/',
@@ -93,6 +98,13 @@ module.exports = function(grunt) {
 
         clean: {
             files: ['build/**/*', '!build']
+        },
+
+        'gh-pages': {
+            options: {
+                base: 'build'
+            },
+            src: ['**']
         }
 
     });
@@ -101,4 +113,5 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['copy', 'bower_concat', 'jade:compile', 'stylus:compile', 'coffee:compile']);
     grunt.registerTask('build', ['copy', 'bower_concat', 'jade:compile', 'stylus:compile', 'coffee:compile']);
     grunt.registerTask('rebuild', ['clean', 'build']);
+    grunt.registerTask('publish', ['rebuild', 'gh-pages']);
 };
